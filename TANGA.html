@@ -24,8 +24,6 @@
         .gradient-bg {
             background: linear-gradient(135deg, #5D5CDE 0%, #FF6B35 100%);
         }
-
-        
         .notification {
             position: fixed;
             top: 20px;
@@ -35,11 +33,9 @@
             transform: translateX(100%);
             transition: transform 0.3s ease-in-out;
         }
-        
         .notification.show {
             transform: translateX(0);
         }
-        
         .loader {
             border: 3px solid #f3f3f3;
             border-top: 3px solid #5D5CDE;
@@ -48,7 +44,6 @@
             height: 30px;
             animation: spin 1s linear infinite;
         }
-        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -60,26 +55,59 @@
     <nav class="bg-white dark:bg-gray-800 shadow-lg fixed w-full top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
+                <!-- Left: Brand -->
                 <div class="flex items-center">
                     <div class="flex-shrink-0 flex items-center">
                         <i class="fas fa-graduation-cap text-primary text-2xl mr-2"></i>
                         <span class="font-bold text-xl text-gray-900 dark:text-white">ULK-NOTE</span>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <button onclick="showPage('accueil')" class="nav-btn text-gray-700 dark:text-gray-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+                <!-- Right: Desktop nav -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <button onclick="handleNavClick('accueil')" class="nav-btn text-gray-700 dark:text-gray-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
                         <i class="fas fa-home mr-1"></i> Accueil
                     </button>
-                    <button onclick="showPage('cours')" class="nav-btn text-gray-700 dark:text-gray-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+                    <button onclick="handleNavClick('cours')" class="nav-btn text-gray-700 dark:text-gray-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
                         <i class="fas fa-book mr-1"></i> Mes Cours
                     </button>
-                    <button onclick="showPage('profil')" class="nav-btn text-gray-700 dark:text-gray-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+                    <button onclick="handleNavClick('profil')" class="nav-btn text-gray-700 dark:text-gray-300 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
                         <i class="fas fa-user mr-1"></i> Profil
                     </button>
                     <div id="user-info" class="hidden items-center space-x-2">
                         <span id="user-name" class="text-sm text-gray-700 dark:text-gray-300"></span>
-                        <button onclick="logout()" class="text-red-600 hover:text-red-800">
+                        <button onclick="logout()" class="text-red-600 hover:text-red-800" title="Déconnexion">
                             <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Mobile: Hamburger -->
+                <div class="flex md:hidden items-center">
+                    <button id="mobile-menu-button" aria-controls="mobile-menu" aria-expanded="false"
+                            class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
+                        <span class="sr-only">Ouvrir le menu</span>
+                        <i class="fas fa-bars text-xl" id="mobile-menu-icon-open"></i>
+                        <i class="fas fa-times text-xl hidden" id="mobile-menu-icon-close"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu panel -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+            <div class="px-4 py-3 space-y-1">
+                <button onclick="handleMobileNav('accueil')" class="w-full text-left flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <i class="fas fa-home mr-2"></i> Accueil
+                </button>
+                <button onclick="handleMobileNav('cours')" class="w-full text-left flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <i class="fas fa-book mr-2"></i> Mes Cours
+                </button>
+                <button onclick="handleMobileNav('profil')" class="w-full text-left flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <i class="fas fa-user mr-2"></i> Profil
+                </button>
+                <div id="user-info-mobile" class="hidden pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center justify-between px-3">
+                        <span id="user-name-mobile" class="text-sm text-gray-700 dark:text-gray-300"></span>
+                        <button onclick="logoutAndCloseMobile()" class="text-red-600 hover:text-red-800 px-2 py-1 rounded" title="Déconnexion">
+                            <i class="fas fa-sign-out-alt mr-1"></i> Déconnexion
                         </button>
                     </div>
                 </div>
@@ -187,7 +215,7 @@
                                 <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Mot de passe</label>
                                 <input type="password" id="password-cours" class="w-full px-3 py-2 text-base border rounded-lg focus:outline-none focus:border-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                             </div>
-                            <button type="submit" class="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors">
+                            <button type="submit" class="W-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors">
                                 Se connecter
                             </button>
                         </form>
@@ -510,22 +538,21 @@
 
     <script>
         // Configuration Supabase
-        const SUPABASE_URL = 'https://wbfhmajsqlqwfdukqxfs.supabase.co'; //   URL Supabase
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndiZmhtYWpzcWxxd2ZkdWtxeGZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4ODYwMzQsImV4cCI6MjA2OTQ2MjAzNH0.s3niT8YGTTR2PKjbtiXmoXIaWlnIFGEt2GCVIjD5NvQ'; // Remplacez par votre clé publique Supabase
-        
+        const SUPABASE_URL = 'https://wbfhmajsqlqwfdukqxfs.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndiZmhtYWpzcWxxd2ZkdWtxeGZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4ODYwMzQsImV4cCI6MjA2OTQ2MjAzNH0.s3niT8YGTTR2PKjbtiXmoXIaWlnIFGEt2GCVIjD5NvQ';
+
         // Initialiser Supabase
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         // Variables globales
         let currentUser = null;
-        let currentUserEmail = null;
         let currentUserType = null;
         let inactivityTimer = null;
         let courses = [];
         let downloadedCourses = [];
         let adminStats = { added: 0, modified: 0, deleted: 0 };
-        
-        // Configuration des buckets Supabase Storage
+
+        // Buckets
         const STORAGE_BUCKETS = {
             COURSES: 'course-files',
             PROFILES: 'profile-photos',
@@ -534,7 +561,7 @@
 
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
-            // Gestion du thème sombre/clair
+            // Thème dark/clair
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 document.documentElement.classList.add('dark');
             }
@@ -545,13 +572,78 @@
                     document.documentElement.classList.remove('dark');
                 }
             });
+
+            // Menu mobile toggle
+            const btn = document.getElementById('mobile-menu-button');
+            btn.addEventListener('click', toggleMobileMenu);
+
             showPage('accueil');
             updateAdminStats();
             loadDropdownOptions();
         });
 
-        // Gestion des pages
-        // Charger dynamiquement les options des menus déroulants
+        // Burger menu helpers
+        function toggleMobileMenu() {
+            const panel = document.getElementById('mobile-menu');
+            const iconOpen = document.getElementById('mobile-menu-icon-open');
+            const iconClose = document.getElementById('mobile-menu-icon-close');
+            const expanded = panel.classList.contains('hidden');
+
+            panel.classList.toggle('hidden');
+            iconOpen.classList.toggle('hidden', !expanded);
+            iconClose.classList.toggle('hidden', expanded);
+
+            document.getElementById('mobile-menu-button').setAttribute('aria-expanded', String(expanded));
+            // Sync user block visibility
+            syncUserBlocks();
+        }
+
+        function closeMobileMenu() {
+            const panel = document.getElementById('mobile-menu');
+            if (!panel.classList.contains('hidden')) {
+                panel.classList.add('hidden');
+                document.getElementById('mobile-menu-icon-open').classList.remove('hidden');
+                document.getElementById('mobile-menu-icon-close').classList.add('hidden');
+                document.getElementById('mobile-menu-button').setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        function handleMobileNav(pageId) {
+            showPage(pageId);
+            closeMobileMenu();
+        }
+
+        function logoutAndCloseMobile() {
+            logout();
+            closeMobileMenu();
+        }
+
+        function handleNavClick(pageId) {
+            showPage(pageId);
+        }
+
+        function syncUserBlocks() {
+            // Desktop block
+            const desktopBlock = document.getElementById('user-info');
+            const mobileBlock = document.getElementById('user-info-mobile');
+            const nameDesktop = document.getElementById('user-name');
+            const nameMobile = document.getElementById('user-name-mobile');
+
+            if (currentUser) {
+                desktopBlock.classList.remove('hidden');
+                mobileBlock.classList.remove('hidden');
+                const label = currentUserType === 'admin' ? 'Admin' : (currentUser.prenom || 'Utilisateur');
+                nameDesktop.textContent = label;
+                nameMobile.textContent = label;
+            } else {
+                desktopBlock.classList.add('hidden');
+                mobileBlock.classList.add('hidden');
+                nameDesktop.textContent = '';
+                nameMobile.textContent = '';
+            }
+        }
+
+        // Charger dynamiquement les options
         async function loadDropdownOptions() {
             await Promise.all([
                 loadDepartments(),
@@ -562,14 +654,13 @@
 
         async function loadDepartments() {
             try {
-                const { data, error } = await supabase.from('departements').select('*');
+                const { data, error } = await sb.from('departements').select('*');
                 if (error) throw error;
                 const select = document.getElementById('course-department');
                 if (select) {
                     select.innerHTML = '<option value="">Sélectionner</option>' +
                         data.map(dep => `<option value="${dep.nom}">${dep.nom}</option>`).join('');
                 }
-                // Si filtre existe
                 const filterSelect = document.getElementById('filter-department');
                 if (filterSelect) {
                     filterSelect.innerHTML = '<option value="">Tous</option>' +
@@ -582,16 +673,12 @@
 
         async function loadFaculties() {
             try {
-                const { data, error } = await supabase.from('facultes').select('*');
+                const { data, error } = await sb.from('facultes').select('*');
                 if (error) throw error;
                 const select = document.getElementById('course-faculty');
                 if (select) {
-                    select.value = '';
-                    select.placeholder = 'Sélectionner';
-                    select.innerHTML = '';
-                    // Remplacer input par select si besoin
-                    // Si c'est un input, on ne peut pas injecter des options
-                    // À faire côté HTML si vous voulez un select
+                    select.innerHTML = '<option value="">Sélectionner</option>' +
+                        data.map(f => `<option value="${f.nom}">${f.nom}</option>`).join('');
                 }
             } catch (error) {
                 console.error('Erreur chargement facultés:', error);
@@ -600,14 +687,13 @@
 
         async function loadPromotions() {
             try {
-                const { data, error } = await supabase.from('promotions').select('*');
+                const { data, error } = await sb.from('promotions').select('*');
                 if (error) throw error;
                 const select = document.getElementById('course-promotion');
                 if (select) {
                     select.innerHTML = '<option value="">Sélectionner</option>' +
                         data.map(promo => `<option value="${promo.nom}">${promo.nom}</option>`).join('');
                 }
-                // Si filtre existe
                 const filterSelect = document.getElementById('filter-promotion');
                 if (filterSelect) {
                     filterSelect.innerHTML = '<option value="">Tous</option>' +
@@ -617,13 +703,14 @@
                 console.error('Erreur chargement promotions:', error);
             }
         }
+
+        // Navigation de pages
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
             document.getElementById('page-' + pageId).classList.remove('hidden');
-            
-            // Réinitialiser le timer d'inactivité
+
             resetInactivityTimer();
-            
+
             if (pageId === 'cours') {
                 if (currentUser && currentUserType === 'etudiant') {
                     showCoursContent();
@@ -642,6 +729,8 @@
                     showProfilChoice();
                 }
             }
+            // sync burger state labels
+            syncUserBlocks();
         }
 
         function showCoursLogin() {
@@ -678,33 +767,31 @@
             document.getElementById('login-etudiant').classList.add('hidden');
             document.getElementById('login-admin').classList.add('hidden');
             document.getElementById('profil-etudiant').classList.remove('hidden');
-            
-            // Remplir les informations du profil
+
             if (currentUser) {
-                document.getElementById('profile-name').textContent = currentUser.nom + ' ' + currentUser.prenom;
-                document.getElementById('profile-matricule').textContent = currentUser.matricule;
+                document.getElementById('profile-name').textContent = (currentUser.nom || '') + ' ' + (currentUser.prenom || '');
+                document.getElementById('profile-matricule').textContent = currentUser.matricule || '';
                 document.getElementById('profile-nom').value = currentUser.nom || '';
                 document.getElementById('profile-prenom').value = currentUser.prenom || '';
                 document.getElementById('profile-sexe').value = currentUser.sexe || '';
             }
         }
 
-        // Fonctions Supabase pour la base de données
+        // Authentification
         async function loginEtudiant(event) {
             event.preventDefault();
-            const matricule = document.getElementById('matricule-cours').value;
+            const matricule = document.getElementById('matricule-cours').value.trim();
             const password = document.getElementById('password-cours').value;
-            
+
             try {
                 showLoading(true);
-                
-                // Authentification avec Supabase
                 const user = await authenticateStudent(matricule, password);
                 if (user) {
                     currentUser = user;
                     currentUserType = 'etudiant';
                     updateUserInfo();
                     await loadCourses();
+                    await loadDownloadedCourses(); // historiser si besoin
                     showCoursContent();
                     showNotification('Connexion réussie!', 'success');
                     startInactivityTimer();
@@ -721,19 +808,20 @@
         }
 
         async function verifyPassword(password, hashedPassword) {
-            // Utilise bcryptjs pour comparer le mot de passe avec le hash
-            return await bcrypt.compare(password, hashedPassword);
+            try {
+                return await bcrypt.compare(password, hashedPassword);
+            } catch (e) {
+                return false;
+            }
         }
 
-        // Correction de authenticateStudent
         async function authenticateStudent(matricule, password) {
-            const { data, error } = await supabase
+            const { data, error } = await sb
                 .from('etudiants')
                 .select('*')
                 .eq('matricule', matricule)
                 .single();
             if (error || !data) return null;
-            // Vérifier le mot de passe hashé avec bcryptjs
             if (await verifyPassword(password, data.password_hash)) {
                 return data;
             }
@@ -742,7 +830,7 @@
 
         function loginProfilEtudiant(event) {
             event.preventDefault();
-            const matricule = document.getElementById('matricule-profil').value;
+            const matricule = document.getElementById('matricule-profil').value.trim();
             const password = document.getElementById('password-profil').value;
             (async () => {
                 try {
@@ -755,6 +843,7 @@
                         showProfilEtudiant();
                         showNotification('Connexion réussie!', 'success');
                         startInactivityTimer();
+                        await loadDownloadedCourses();
                         await logActivity('Connexion profil étudiant', { matricule: user.matricule });
                     } else {
                         showNotification('Matricule ou mot de passe incorrect', 'error');
@@ -768,15 +857,13 @@
             })();
         }
 
-        // Correction de authenticateAdmin
         async function authenticateAdmin(username, password) {
-            const { data, error } = await supabase
+            const { data, error } = await sb
                 .from('administrateurs')
                 .select('*')
                 .eq('username', username)
                 .single();
             if (error || !data) return null;
-            // Vérifier le mot de passe hashé avec bcryptjs
             if (await verifyPassword(password, data.password_hash)) {
                 return data;
             }
@@ -785,7 +872,7 @@
 
         function loginAdmin(event) {
             event.preventDefault();
-            const username = document.getElementById('username-admin').value;
+            const username = document.getElementById('username-admin').value.trim();
             const password = document.getElementById('password-admin').value;
             (async () => {
                 try {
@@ -795,10 +882,11 @@
                         currentUser = user;
                         currentUserType = 'admin';
                         updateUserInfo();
+                        await loadCourses();
+                        loadAdminCourses();
                         showPage('gestion');
                         showNotification('Connexion administrateur réussie!', 'success');
                         startInactivityTimer();
-                        loadAdminCourses();
                         await logActivity('Connexion administrateur', { username: username });
                     } else {
                         showNotification('Nom d\'utilisateur ou mot de passe incorrect', 'error');
@@ -819,38 +907,50 @@
             document.getElementById('user-info').classList.add('hidden');
             showPage('accueil');
             showNotification('Déconnexion réussie', 'success');
-            
-            // Réinitialiser les formulaires
-            document.getElementById('matricule-cours').value = '';
-            document.getElementById('password-cours').value = '';
-            document.getElementById('matricule-profil').value = '';
-            document.getElementById('password-profil').value = '';
-            document.getElementById('username-admin').value = '';
-            document.getElementById('password-admin').value = '';
+
+            // Reset forms
+            const ids = ['matricule-cours','password-cours','matricule-profil','password-profil','username-admin','password-admin'];
+            ids.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+
+            // Sync burger
+            syncUserBlocks();
         }
 
         function updateUserInfo() {
             if (currentUser) {
                 document.getElementById('user-info').classList.remove('hidden');
-                document.getElementById('user-name').textContent = currentUserType === 'admin' ? 'Admin' : currentUser.prenom;
+                const label = currentUserType === 'admin' ? 'Admin' : (currentUser.prenom || 'Utilisateur');
+                document.getElementById('user-name').textContent = label;
             }
+            syncUserBlocks();
         }
 
-        // Gestion des cours
+        // Cours - affichage et filtres
         function displayCours() {
             const coursContainer = document.getElementById('cours-list');
             const filteredCours = filterCoursData();
-            
+
+            if (!filteredCours.length) {
+                coursContainer.innerHTML = `
+                    <div class="md:col-span-2 lg:col-span-3">
+                        <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow text-center text-gray-600 dark:text-gray-300">
+                            Aucun cours à afficher.
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
             coursContainer.innerHTML = filteredCours.map(cours => `
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
                     <div class="flex items-start justify-between mb-4">
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">${cours.title}</h3>
                             <div class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                                <p><i class="fas fa-building mr-2"></i>${cours.department}</p>
-                                <p><i class="fas fa-university mr-2"></i>${cours.faculty}</p>
-                                <p><i class="fas fa-graduation-cap mr-2"></i>${cours.promotion}</p>
-                                <p><i class="fas fa-calendar mr-2"></i>${cours.year}</p>
+                                <p><i class="fas fa-building mr-2"></i>${cours.department || '-'}</p>
+                                <p><i class="fas fa-university mr-2"></i>${cours.faculty || '-'}</p>
+                                <p><i class="fas fa-graduation-cap mr-2"></i>${cours.promotion || '-'}</p>
+                                <p><i class="fas fa-calendar mr-2"></i>${cours.year || '-'}</p>
                             </div>
                         </div>
                         <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
@@ -869,24 +969,21 @@
         function filterCoursData() {
             const department = document.getElementById('filter-department').value;
             const promotion = document.getElementById('filter-promotion').value;
-            
+
             return courses.filter(cours => {
                 return (!department || cours.department === department) &&
                        (!promotion || cours.promotion === promotion);
             });
         }
 
-
-
-        // Gestion du profil
+        // Profil
         function changeProfilePhoto(event) {
             const file = event.target.files[0];
             if (file) {
-                if (file.size > 4 * 1024 * 1024) { // 4MB
+                if (file.size > 4 * 1024 * 1024) {
                     showNotification('La photo doit faire moins de 4MB', 'error');
                     return;
                 }
-                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const profilePhoto = document.getElementById('profile-photo');
@@ -909,41 +1006,54 @@
             }
         }
 
-        function saveProfile(event) {
+        async function saveProfile(event) {
             event.preventDefault();
-            const nom = document.getElementById('profile-nom').value;
-            const prenom = document.getElementById('profile-prenom').value;
+            const nom = document.getElementById('profile-nom').value.trim();
+            const prenom = document.getElementById('profile-prenom').value.trim();
             const sexe = document.getElementById('profile-sexe').value;
-            
-            if (currentUser) {
+
+            if (!currentUser) return;
+
+            try {
+                showLoading(true);
                 currentUser.nom = nom;
                 currentUser.prenom = prenom;
                 currentUser.sexe = sexe;
-                
+
+                await updateStudentProfile({
+                    nom, prenom, sexe,
+                    photoProfilUrl: currentUser.photo_profil_url || null,
+                    photoCouvertureUrl: currentUser.photo_couverture_url || null
+                });
+
                 document.getElementById('profile-name').textContent = nom + ' ' + prenom;
-                document.getElementById('user-name').textContent = prenom;
-                
+                document.getElementById('user-name').textContent = prenom || 'Utilisateur';
+                syncUserBlocks();
                 showNotification('Profil mis à jour avec succès!', 'success');
-                logActivity('Mise à jour profil', { matricule: currentUser.matricule });
+                await logActivity('Mise à jour profil', { matricule: currentUser.matricule });
+            } catch (e) {
+                console.error(e);
+                showNotification('Erreur lors de la mise à jour du profil', 'error');
+            } finally {
+                showLoading(false);
             }
         }
 
         function showDownloadedCourses() {
             const modal = document.getElementById('downloaded-modal');
             const list = document.getElementById('downloaded-list');
-            
+
             if (downloadedCourses.length === 0) {
                 list.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center py-4">Aucun cours téléchargé</p>';
             } else {
                 list.innerHTML = downloadedCourses.map(course => `
                     <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                         <h4 class="font-semibold text-gray-900 dark:text-white">${course.title}</h4>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">${course.department} - ${course.promotion}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">${course.department || '-'} - ${course.promotion || '-'}</p>
                         <p class="text-xs text-gray-500 dark:text-gray-500">Téléchargé le ${course.downloadDate}</p>
                     </div>
                 `).join('');
             }
-            
             modal.classList.remove('hidden');
         }
 
@@ -951,21 +1061,21 @@
             document.getElementById('downloaded-modal').classList.add('hidden');
         }
 
-        // Gestion admin
+        // Admin - liste
         function loadAdminCourses() {
             const tbody = document.getElementById('admin-cours-list');
             tbody.innerHTML = courses.map(course => `
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">${course.title}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">${course.department}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">${course.faculty}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">${course.promotion}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">${course.year}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">${course.department || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">${course.faculty || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">${course.promotion || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">${course.year || '-'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
-                        <button onclick="editCourse(${course.id})" class="text-blue-600 hover:text-blue-800">
+                        <button onclick="editCourse(${course.id})" class="text-blue-600 hover:text-blue-800" title="Modifier">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button onclick="deleteCourse(${course.id})" class="text-red-600 hover:text-red-800">
+                        <button onclick="deleteCourse(${course.id})" class="text-red-600 hover:text-red-800" title="Supprimer">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
@@ -986,11 +1096,11 @@
             if (course) {
                 document.getElementById('modal-title').textContent = 'Modifier le cours';
                 document.getElementById('course-id').value = course.id;
-                document.getElementById('course-title').value = course.title;
-                document.getElementById('course-department').value = course.department;
-                document.getElementById('course-faculty').value = course.faculty;
-                document.getElementById('course-promotion').value = course.promotion;
-                document.getElementById('course-year').value = course.year;
+                document.getElementById('course-title').value = course.title || '';
+                document.getElementById('course-department').value = course.department || '';
+                document.getElementById('course-faculty').value = course.faculty || '';
+                document.getElementById('course-promotion').value = course.promotion || '';
+                document.getElementById('course-year').value = course.year || '';
                 document.getElementById('course-file').required = false;
                 document.getElementById('course-modal').classList.remove('hidden');
             }
@@ -998,19 +1108,35 @@
 
         function deleteCourse(courseId) {
             showCustomConfirm('Êtes-vous sûr de vouloir supprimer ce cours?', async () => {
-                const courseIndex = courses.findIndex(c => c.id === courseId);
-                if (courseIndex > -1) {
-                    const course = courses[courseIndex];
-                    // Supprimer le PDF du storage
-                    if (course.pdf_url) {
-                        const pdfPath = course.pdf_url.split('/').pop();
-                        await supabase.storage.from(STORAGE_BUCKETS.COURSES).remove([pdfPath]);
+                try {
+                    showLoading(true);
+                    const idx = courses.findIndex(c => c.id === courseId);
+                    if (idx === -1) return;
+
+                    const course = courses[idx];
+
+                    // Supprimer le fichier du storage si présent
+                    if (course.filePath) {
+                        const { error: rmErr } = await sb.storage.from(STORAGE_BUCKETS.COURSES).remove([course.filePath]);
+                        if (rmErr) console.warn('Erreur suppression fichier storage:', rmErr);
                     }
-                    // ...supprimer dans la base...
-                    courses.splice(courseIndex, 1);
-                    updateAdminStats();
+
+                    // Supprimer dans la base
+                    await deleteCourseFromDatabase(courseId);
+
+                    // Rafraîchir la liste
+                    await loadCourses();
                     loadAdminCourses();
+
+                    adminStats.deleted += 1;
+                    updateAdminStats();
                     showNotification('Cours supprimé avec succès!', 'success');
+                    await logActivity('Suppression cours', { cours_id: courseId, titre: course.title });
+                } catch (e) {
+                    console.error(e);
+                    showNotification('Erreur lors de la suppression du cours', 'error');
+                } finally {
+                    showLoading(false);
                 }
             });
         }
@@ -1018,11 +1144,11 @@
         function saveCourse(event) {
             event.preventDefault();
             const courseId = document.getElementById('course-id').value;
-            const title = document.getElementById('course-title').value;
+            const title = document.getElementById('course-title').value.trim();
             const department = document.getElementById('course-department').value;
             const faculty = document.getElementById('course-faculty').value;
             const promotion = document.getElementById('course-promotion').value;
-            const year = document.getElementById('course-year').value;
+            const year = document.getElementById('course-year').value.trim();
             const file = document.getElementById('course-file').files[0];
 
             if (!courseId && !file) {
@@ -1033,52 +1159,90 @@
                 showNotification('Le fichier doit être au format PDF.', 'error');
                 return;
             }
-            showLoading(true);
+
             (async () => {
-                let pdf_url = null;
-                let old_pdf_url = null;
-                if (courseId) {
-                    // Modification
-                    const course = courses.find(c => c.id === courseId);
-                    if (course) {
-                        old_pdf_url = course.pdf_url;
-                    }
+                try {
+                    showLoading(true);
+
+                    let newFilePath = null;
+                    let newPublicUrl = null;
+                    let newFileName = null;
+                    let newFileSize = null;
+
                     if (file) {
-                        // Supprimer l'ancien fichier
-                        if (old_pdf_url) {
-                            const oldPath = old_pdf_url.split('/').pop();
-                            await supabase.storage.from(STORAGE_BUCKETS.COURSES).remove([oldPath]);
-                        }
-                        // Uploader le nouveau fichier
-                        const { data, error } = await supabase.storage.from(STORAGE_BUCKETS.COURSES).upload(`${Date.now()}_${file.name}`, file);
-                        if (error) {
+                        const uploadName = `${Date.now()}_${file.name}`;
+                        const { data: up, error: upErr } = await sb.storage
+                            .from(STORAGE_BUCKETS.COURSES)
+                            .upload(uploadName, file);
+                        if (upErr) {
                             showNotification('Erreur upload PDF', 'error');
-                            showLoading(false);
                             return;
                         }
-                        pdf_url = `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKETS.COURSES}/${data.path}`;
+                        newFilePath = up.path; // important
+                        newFileName = file.name;
+                        newFileSize = file.size;
+                        newPublicUrl = `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKETS.COURSES}/${newFilePath}`;
+                    }
+
+                    if (courseId) {
+                        // Modification
+                        const existing = courses.find(c => c.id == courseId);
+                        // Si nouveau fichier, supprimer l'ancien
+                        if (file && existing && existing.filePath) {
+                            const { error: rmErr } = await sb.storage.from(STORAGE_BUCKETS.COURSES).remove([existing.filePath]);
+                            if (rmErr) console.warn('Erreur suppression ancien PDF:', rmErr);
+                        }
+
+                        const updateData = {
+                            id: Number(courseId),
+                            title,
+                            department,
+                            faculty,
+                            promotion,
+                            year,
+                            filename: newFileName || existing?.filename || null,
+                            fileSize: newFileSize || existing?.fileSize || null
+                        };
+
+                        await saveCourseToDatabase(updateData, {
+                            filePath: file ? newFilePath : existing?.filePath || null,
+                            fileUrl: file ? newPublicUrl : existing?.fileUrl || null
+                        });
+
+                        adminStats.modified += 1;
+                        showNotification('Cours modifié avec succès!', 'success');
+                        await logActivity('Modification cours', { cours_id: courseId, titre: title });
                     } else {
-                        pdf_url = old_pdf_url;
+                        // Ajout
+                        const insertData = {
+                            title,
+                            department,
+                            faculty,
+                            promotion,
+                            year,
+                            filename: newFileName,
+                            fileSize: newFileSize
+                        };
+                        await saveCourseToDatabase(insertData, {
+                            filePath: newFilePath,
+                            fileUrl: newPublicUrl
+                        });
+                        adminStats.added += 1;
+                        showNotification('Cours ajouté avec succès!', 'success');
+                        await logActivity('Ajout cours', { titre: title });
                     }
-                    // Mettre à jour la table cours (à adapter selon ta logique d'update)
-                    // ...update dans la base...
-                    showNotification('Cours modifié avec succès!', 'success');
-                } else {
-                    // Ajout
-                    const { data, error } = await supabase.storage.from(STORAGE_BUCKETS.COURSES).upload(`${Date.now()}_${file.name}`, file);
-                    if (error) {
-                        showNotification('Erreur upload PDF', 'error');
-                        showLoading(false);
-                        return;
-                    }
-                    pdf_url = `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKETS.COURSES}/${data.path}`;
-                    // ...ajout dans la base avec pdf_url...
-                    showNotification('Cours ajouté avec succès!', 'success');
+
+                    // Rafraîchir
+                    await loadCourses();
+                    loadAdminCourses();
+                    updateAdminStats();
+                    closeCourseModal();
+                } catch (e) {
+                    console.error('Erreur saveCourse:', e);
+                    showNotification('Erreur lors de la sauvegarde du cours', 'error');
+                } finally {
+                    showLoading(false);
                 }
-                updateAdminStats();
-                loadAdminCourses();
-                closeCourseModal();
-                showLoading(false);
             })();
         }
 
@@ -1093,7 +1257,7 @@
             document.getElementById('stat-deleted').textContent = adminStats.deleted;
         }
 
-        // Utilitaires
+        // Notifications et confirm
         function showNotification(message, type = 'info') {
             const notification = document.getElementById('notification');
             const colors = {
@@ -1102,7 +1266,6 @@
                 info: 'bg-blue-500',
                 warning: 'bg-yellow-500'
             };
-            
             notification.innerHTML = `
                 <div class="${colors[type]} text-white px-4 py-3 rounded-lg shadow-lg">
                     <div class="flex items-center justify-between">
@@ -1113,12 +1276,8 @@
                     </div>
                 </div>
             `;
-            
             notification.classList.add('show');
-            
-            setTimeout(() => {
-                hideNotification();
-            }, 5000);
+            setTimeout(() => { hideNotification(); }, 5000);
         }
 
         function hideNotification() {
@@ -1143,13 +1302,13 @@
         // Charger les cours depuis Supabase
         async function loadCourses() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await sb
                     .from('cours')
                     .select('*')
                     .order('created_at', { ascending: false });
-                
+
                 if (error) throw error;
-                
+
                 courses = data.map(course => ({
                     id: course.id,
                     title: course.titre,
@@ -1158,10 +1317,11 @@
                     promotion: course.promotion,
                     year: course.annee_academique,
                     filename: course.fichier_nom,
-                    fileUrl: course.fichier_url,
+                    fileUrl: course.fichier_url || null,   // publique (optionnel)
+                    filePath: course.fichier_path || null, // path dans le bucket
                     fileSize: course.taille_fichier
                 }));
-                
+
                 return courses;
             } catch (error) {
                 console.error('Erreur lors du chargement des cours:', error);
@@ -1170,72 +1330,71 @@
             }
         }
 
-        // Télécharger un cours depuis Supabase Storage
+        // Télécharger un cours
         async function downloadCourse(courseId) {
             const course = courses.find(c => c.id === courseId);
             if (!course) return;
-            
+
+            if (!course.filePath) {
+                showNotification('Ce cours ne possède pas de fichier.', 'warning');
+                return;
+            }
+
             try {
                 showNotification(`Téléchargement de "${course.title}" en cours...`, 'info');
-                
-                // Créer un lien de téléchargement direct
-                const { data, error } = await supabase.storage
+
+                const { data, error } = await sb.storage
                     .from(STORAGE_BUCKETS.COURSES)
-                    .createSignedUrl(course.fileUrl, 3600); // URL valide 1 heure
-                
+                    .createSignedUrl(course.filePath, 3600);
+
                 if (error) throw error;
-                
-                // Télécharger le fichier
+
                 const a = document.createElement('a');
                 a.href = data.signedUrl;
-                a.download = course.filename;
+                a.download = course.filename || 'cours.pdf';
                 a.target = '_blank';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
-                
-                // Enregistrer le téléchargement
-                await saveDownloadRecord(currentUser.id, course.id);
-                
+
+                await saveDownloadRecord(currentUser?.id, course.id);
+
                 const downloadInfo = {
                     ...course,
                     downloadDate: new Date().toLocaleString('fr-FR')
                 };
                 downloadedCourses.push(downloadInfo);
-                
+
                 showNotification(`"${course.title}" téléchargé avec succès!`, 'success');
                 await logActivity('Téléchargement', { 
-                    matricule: currentUser.matricule, 
+                    utilisateur: currentUserType === 'etudiant' ? currentUser?.matricule : 'admin',
                     cours: course.title,
                     date: new Date().toISOString()
                 });
-                
+
             } catch (error) {
                 console.error('Erreur de téléchargement:', error);
                 showNotification('Erreur lors du téléchargement', 'error');
             }
         }
 
-        // Enregistrer un téléchargement dans la base
+        // Enregistrer un téléchargement
         async function saveDownloadRecord(etudiantId, coursId) {
-            const { error } = await supabase
+            if (!etudiantId || !coursId) return;
+            const { error } = await sb
                 .from('telechargements')
                 .insert({
                     etudiant_id: etudiantId,
                     cours_id: coursId
                 });
-            
-            if (error) {
-                console.error('Erreur enregistrement téléchargement:', error);
-            }
+            if (error) console.error('Erreur enregistrement téléchargement:', error);
         }
 
         // Charger l'historique des téléchargements
         async function loadDownloadedCourses() {
             if (!currentUser) return;
-            
             try {
-                const { data, error } = await supabase
+                const { data, error } = await sb
                     .from('telechargements')
                     .select(`
                         *,
@@ -1248,96 +1407,27 @@
                     `)
                     .eq('etudiant_id', currentUser.id)
                     .order('date_telechargement', { ascending: false });
-                
+
                 if (error) throw error;
-                
+
                 downloadedCourses = data.map(item => ({
-                    title: item.cours.titre,
-                    department: item.cours.departement,
-                    promotion: item.cours.promotion,
-                    filename: item.cours.fichier_nom,
+                    title: item.cours?.titre,
+                    department: item.cours?.departement,
+                    promotion: item.cours?.promotion,
+                    filename: item.cours?.fichier_nom,
                     downloadDate: new Date(item.date_telechargement).toLocaleString('fr-FR')
                 }));
-                
+
             } catch (error) {
                 console.error('Erreur chargement historique:', error);
             }
         }
 
-        // Upload de photo de profil vers Supabase Storage
-        async function uploadProfilePhoto(file, userId) {
-            try {
-                const fileExt = file.name.split('.').pop();
-                const fileName = `${userId}-profile.${fileExt}`;
-                
-                const { error: uploadError } = await supabase.storage
-                    .from(STORAGE_BUCKETS.PROFILES)
-                    .upload(fileName, file, { upsert: true });
-                
-                if (uploadError) throw uploadError;
-                
-                // Obtenir l'URL publique
-                const { data } = supabase.storage
-                    .from(STORAGE_BUCKETS.PROFILES)
-                    .getPublicUrl(fileName);
-                
-                return data.publicUrl;
-                
-            } catch (error) {
-                console.error('Erreur upload photo:', error);
-                throw error;
-            }
-        }
-
-        // Upload de photo de couverture
-        async function uploadCoverPhoto(file, userId) {
-            try {
-                const fileExt = file.name.split('.').pop();
-                const fileName = `${userId}-cover.${fileExt}`;
-                
-                const { error: uploadError } = await supabase.storage
-                    .from(STORAGE_BUCKETS.COVERS)
-                    .upload(fileName, file, { upsert: true });
-                
-                if (uploadError) throw uploadError;
-                
-                const { data } = supabase.storage
-                    .from(STORAGE_BUCKETS.COVERS)
-                    .getPublicUrl(fileName);
-                
-                return data.publicUrl;
-                
-            } catch (error) {
-                console.error('Erreur upload couverture:', error);
-                throw error;
-            }
-        }
-
-        // Upload de fichier PDF cours
-        async function uploadCourseFile(file) {
-            try {
-                const fileExt = file.name.split('.').pop();
-                const fileName = `cours-${Date.now()}.${fileExt}`;
-                
-                const { error: uploadError } = await supabase.storage
-                    .from(STORAGE_BUCKETS.COURSES)
-                    .upload(fileName, file);
-                
-                if (uploadError) throw uploadError;
-                
-                return fileName;
-                
-            } catch (error) {
-                console.error('Erreur upload PDF:', error);
-                throw error;
-            }
-        }
-
-        // Sauvegarder/modifier un cours
-        async function saveCourseToDatabase(courseData, fileUrl = null) {
+        // Sauvegarder / modifier un cours dans la base
+        async function saveCourseToDatabase(courseData, fileData = null) {
             try {
                 if (courseData.id) {
-                    // Modification
+                    // Update
                     const updateData = {
                         titre: courseData.title,
                         departement: courseData.department,
@@ -1346,38 +1436,40 @@
                         annee_academique: courseData.year,
                         updated_at: new Date().toISOString()
                     };
-                    
-                    if (fileUrl) {
-                        updateData.fichier_url = fileUrl;
-                        updateData.fichier_nom = courseData.filename;
-                        updateData.taille_fichier = courseData.fileSize;
+                    if (fileData && (fileData.filePath || fileData.fileUrl)) {
+                        if (fileData.filePath) updateData.fichier_path = fileData.filePath;
+                        if (fileData.fileUrl) updateData.fichier_url = fileData.fileUrl;
+                        if (courseData.filename != null) updateData.fichier_nom = courseData.filename;
+                        if (courseData.fileSize != null) updateData.taille_fichier = courseData.fileSize;
+                    } else {
+                        if (courseData.filename != null) updateData.fichier_nom = courseData.filename;
+                        if (courseData.fileSize != null) updateData.taille_fichier = courseData.fileSize;
                     }
-                    
-                    const { error } = await supabase
+
+                    const { error } = await sb
                         .from('cours')
                         .update(updateData)
                         .eq('id', courseData.id);
-                    
+
                     if (error) throw error;
-                    
                 } else {
-                    // Ajout
-                    const { error } = await supabase
+                    // Insert
+                    const insertData = {
+                        titre: courseData.title,
+                        departement: courseData.department,
+                        faculte: courseData.faculty,
+                        promotion: courseData.promotion,
+                        annee_academique: courseData.year,
+                        fichier_url: fileData?.fileUrl || null,
+                        fichier_path: fileData?.filePath || null,
+                        fichier_nom: courseData.filename || null,
+                        taille_fichier: courseData.fileSize || null
+                    };
+                    const { error } = await sb
                         .from('cours')
-                        .insert({
-                            titre: courseData.title,
-                            departement: courseData.department,
-                            faculte: courseData.faculty,
-                            promotion: courseData.promotion,
-                            annee_academique: courseData.year,
-                            fichier_url: fileUrl,
-                            fichier_nom: courseData.filename,
-                            taille_fichier: courseData.fileSize
-                        });
-                    
+                        .insert(insertData);
                     if (error) throw error;
                 }
-                
                 return true;
             } catch (error) {
                 console.error('Erreur sauvegarde cours:', error);
@@ -1385,16 +1477,14 @@
             }
         }
 
-        // Supprimer un cours
+        // Supprimer un cours de la base
         async function deleteCourseFromDatabase(courseId) {
             try {
-                const { error } = await supabase
+                const { error } = await sb
                     .from('cours')
                     .delete()
                     .eq('id', courseId);
-                
                 if (error) throw error;
-                
                 return true;
             } catch (error) {
                 console.error('Erreur suppression cours:', error);
@@ -1405,20 +1495,18 @@
         // Mettre à jour le profil étudiant
         async function updateStudentProfile(profileData) {
             try {
-                const { error } = await supabase
+                const { error } = await sb
                     .from('etudiants')
                     .update({
                         nom: profileData.nom,
                         prenom: profileData.prenom,
                         sexe: profileData.sexe,
-                        photo_profil_url: profileData.photoProfilUrl,
-                        photo_couverture_url: profileData.photoCouvertureUrl,
+                        photo_profil_url: profileData.photoProfilUrl || null,
+                        photo_couverture_url: profileData.photoCouvertureUrl || null,
                         updated_at: new Date().toISOString()
                     })
                     .eq('id', currentUser.id);
-                
                 if (error) throw error;
-                
                 return true;
             } catch (error) {
                 console.error('Erreur mise à jour profil:', error);
@@ -1429,12 +1517,12 @@
         // Logger une activité
         async function logActivity(typeActivite, details) {
             try {
-                await supabase
+                await sb
                     .from('logs_activite')
                     .insert({
                         type_activite: typeActivite,
-                        utilisateur_id: currentUser.id,
-                        utilisateur_type: currentUserType,
+                        utilisateur_id: currentUser ? currentUser.id : null,
+                        utilisateur_type: currentUserType || null,
                         details: details
                     });
             } catch (error) {
@@ -1442,35 +1530,20 @@
             }
         }
 
-        // Charger les statistiques admin
+        // Charger les statistiques admin (optionnel)
         async function loadAdminStats() {
             try {
-                const { data: totalCours } = await supabase
-                    .from('cours')
-                    .select('id');
-                
-                const { data: logsAjout } = await supabase
-                    .from('logs_activite')
-                    .select('id')
-                    .eq('type_activite', 'Ajout cours');
-                
-                const { data: logsModif } = await supabase
-                    .from('logs_activite')
-                    .select('id')
-                    .eq('type_activite', 'Modification cours');
-                
-                const { data: logsSuppr } = await supabase
-                    .from('logs_activite')
-                    .select('id')
-                    .eq('type_activite', 'Suppression cours');
-                
+                const { data: totalCours } = await sb.from('cours').select('id');
+                const { data: logsAjout } = await sb.from('logs_activite').select('id').eq('type_activite', 'Ajout cours');
+                const { data: logsModif } = await sb.from('logs_activite').select('id').eq('type_activite', 'Modification cours');
+                const { data: logsSuppr } = await sb.from('logs_activite').select('id').eq('type_activite', 'Suppression cours');
+
                 adminStats = {
                     total: totalCours?.length || 0,
                     added: logsAjout?.length || 0,
                     modified: logsModif?.length || 0,
                     deleted: logsSuppr?.length || 0
                 };
-                
                 updateAdminStats();
             } catch (error) {
                 console.error('Erreur chargement stats:', error);
@@ -1478,13 +1551,8 @@
         }
 
         function showLoading(show) {
-            // Afficher/masquer un indicateur de chargement
             const loader = document.getElementById('loader') || createLoader();
-            if (show) {
-                loader.style.display = 'block';
-            } else {
-                loader.style.display = 'none';
-            }
+            loader.style.display = show ? 'flex' : 'none';
         }
 
         function createLoader() {
@@ -1497,7 +1565,7 @@
             return loader;
         }
 
-        // Gestion de l'inactivité
+        // Inactivité
         function startInactivityTimer() {
             clearInactivityTimer();
             inactivityTimer = setTimeout(() => {
@@ -1519,7 +1587,6 @@
             }
         }
 
-        // Événements de souris et clavier pour détecter l'activité
         ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
             document.addEventListener(event, resetInactivityTimer, true);
         });
